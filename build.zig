@@ -4,7 +4,7 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    _ = b.addModule("mz_g4", .{ .root_source_file = .{ .path = "magz_g4.zig" } });
+    _ = b.addModule("magz_g4", .{ .root_source_file = .{ .path = "magz_g4.zig" } });
 
     // const lib = b.addStaticLibrary(.{
     //     .name = "magz_g4",
