@@ -6,17 +6,8 @@ pub fn build(b: *std.Build) void {
 
     _ = b.addModule("magz_g4", .{ .root_source_file = .{ .path = "magz_g4.zig" } });
 
-    // const lib = b.addStaticLibrary(.{
-    //     .name = "magz_g4",
-    //     .root_source_file = .{ .path = "src/main.zig" },
-    //     .target = target,
-    //     .optimize = optimize,
-    // });
-
-    // b.installArtifact(lib);
-
     const main_tests = b.addTest(.{
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = .{ .path = "magz_g4-tests.zig" },
         .target = target,
         .optimize = optimize,
     });
