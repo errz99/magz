@@ -1,2 +1,2 @@
-# magz_g4
-A sort of module that includes gtk4 utils.
+# magz
+A sort of module with utils in zig language.

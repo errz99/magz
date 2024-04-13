@@ -9,7 +9,7 @@ var buf_end: [128]u8 = undefined;
 var buf_str: [256]u8 = undefined;
 
 pub fn sayHola(name: []const u8) void {
-    print("Hola desde magz_g4, {s}\n", .{name});
+    print("Hola desde magz, {s}\n", .{name});
 }
 
 pub fn itoaBuf(num: usize) ![]const u8 {

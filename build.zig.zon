@@ -1,5 +1,5 @@
 .{
-    .name = "magz_g4",
+    .name = "magz",
     .version = "0.4.0",
     .paths = .{""},
 }
