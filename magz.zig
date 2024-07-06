@@ -13,19 +13,17 @@ pub fn sayHola(name: []const u8) void {
 }
 
 pub fn itoaBuf(num: usize) ![]const u8 {
-    const result = try std.fmt.bufPrint(&buf_itoa, "{}", .{num});
-    buf_itoa[result.len] = 0;
+    const result = try std.fmt.bufPrintZ(&buf_itoa, "{}", .{num});
     return buf_itoa[0..result.len];
 }
 
 pub fn mkupBuf(a: []const u8, b: []const u8, cc: []const u8) ![]const u8 {
-    const result = try std.fmt.bufPrint(&buf_mkup, "{s}{s}{s}", .{ a, b, cc });
-    buf_mkup[result.len] = 0;
+    const result = try std.fmt.bufPrintZ(&buf_mkup, "{s}{s}{s}", .{ a, b, cc });
     return buf_mkup[0 .. result.len + 1];
 }
+
 pub fn mkupFs(a: []const u8, b: usize, cc: []const u8) ![]const u8 {
-    const result = try std.fmt.bufPrint(&buf_mkup, "{s}{}{s}", .{ a, b, cc });
-    buf_mkup[result.len] = 0;
+    const result = try std.fmt.bufPrintZ(&buf_mkup, "{s}{}{s}", .{ a, b, cc });
     return buf_mkup[0 .. result.len + 1];
 }
 
