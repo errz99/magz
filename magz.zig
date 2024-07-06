@@ -8,10 +8,6 @@ var buf_start: [128]u8 = undefined;
 var buf_end: [128]u8 = undefined;
 var buf_str: [256]u8 = undefined;
 
-pub fn sayHola(name: []const u8) void {
-    print("Hola desde magz, {s}\n", .{name});
-}
-
 pub fn itoaBuf(num: usize) ![]const u8 {
     const result = try std.fmt.bufPrintZ(&buf_itoa, "{}", .{num});
     return buf_itoa[0..result.len];
