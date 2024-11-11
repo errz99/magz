@@ -44,28 +44,30 @@ pub fn fromCstr(str: [*c]const u8) []const u8 {
 }
 
 pub fn toCstr(str: []const u8) []const u8 {
-    // var pos: usize = 0;
-    // for (str) |s| {
-    //     buf_str[pos] = s;
-    //     pos += 1;
-    // }
-    // buf_str[pos] = 0;
-    // return buf_str[0..pos];
+    var pos: usize = 0;
+    for (str) |s| {
+        buf_str[pos] = s;
+        if (pos < buf_str.len - 1) pos += 1 else break;
+    }
+    buf_str[pos] = 0;
+    return buf_str[0..pos];
+}
 
+pub fn toCstrBis(str: []const u8) []const u8 {
+    var str_len = str.len;
+    if (str.len >= buf_str.len) str_len = buf_str.len - 1;
+    @memcpy(buf_str[0..str_len], str[0..str_len]);
+    buf_str[str_len] = 0;
+    return buf_str[0..str_len];
+}
+
+pub fn toCstrZ(str: []const u8) [:0]const u8 {
     @memcpy(buf_str[0..str.len], str);
     buf_str[str.len] = 0;
-    return buf_str[0..str.len];
+    return buf_str[0..str.len :0];
 }
 
 pub fn toCstrWithBuf(buf: []u8, str: []const u8) usize {
-    // var pos: usize = 0;
-    // for (str) |s| {
-    //     buf[pos] = s;
-    //     pos += 1;
-    // }
-    // buf[pos] = 0;
-    // return pos;
-
     @memcpy(buf[0..str.len], str);
     buf[str.len] = 0;
     return str.len;
