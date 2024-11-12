@@ -8,6 +8,38 @@ var buf_start: [128]u8 = undefined;
 var buf_end: [128]u8 = undefined;
 var buf_str: [256]u8 = undefined;
 
+const BUF_SIZE = 128;
+
+pub const MyString = struct {
+    buf: [BUF_SIZE]u8 = .{0} ** BUF_SIZE,
+    len: usize,
+
+    pub fn init(str: []const u8) MyString {
+        var buf: [BUF_SIZE]u8 = undefined;
+        @memcpy(buf[0..str.len], str);
+        buf[str.len] = 0;
+
+        return MyString{
+            .buf = buf,
+            .len = str.len,
+        };
+    }
+
+    pub fn update(self: *MyString, str: []const u8) void {
+        @memcpy(self.buf[0..str.len], str);
+        self.buf[str.len] = 0;
+        self.len = str.len;
+    }
+
+    pub fn bufForC(self: *MyString) []const u8 {
+        return self.buf[0..self.len];
+    }
+
+    pub fn strZ(self: *MyString) [:0]const u8 {
+        return self.buf[0..self.len :0];
+    }
+};
+
 pub fn itoaBuf(num: usize) ![]const u8 {
     const result = try std.fmt.bufPrintZ(&buf_itoa, "{}", .{num});
     return buf_itoa[0..result.len];
