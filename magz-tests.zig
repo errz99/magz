@@ -27,3 +27,12 @@ test "MyString" {
     try expectEqual(my_str_z.buf[14], 'f');
     try expectEqual(my_str_z.len, 15);
 }
+
+test "iupAxBbuf" {
+    var buf: [16]u8 = undefined;
+    const res = try magz.iupAxBbuf(&buf, 1234, 321);
+    std.debug.print("\ntest iupAxBbuf: {s}\n", .{buf[0..res]});
+
+    try expectEqual(buf[4], 'x');
+    try expectEqual(res, 8);
+}

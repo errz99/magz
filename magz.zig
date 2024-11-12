@@ -110,3 +110,8 @@ pub fn compare2str(str1: []const u8, str2: []const u8) bool {
     if (std.mem.eql(u8, str1, str2)) return true;
     return false;
 }
+
+pub fn iupAxBbuf(str: []u8, num1: u64, num2: u64) !usize {
+    const res = try std.fmt.bufPrintZ(str, "{}x{}", .{ num1, num2 });
+    return res.len;
+}
