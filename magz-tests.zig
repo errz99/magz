@@ -1,25 +1,30 @@
 const std = @import("std");
-const expect = std.testing.expect;
+const expectEqual = std.testing.expectEqual;
+const expectEqualStrings = std.testing.expectEqualStrings;
 const magz = @import("magz.zig");
 
-test "to C string" {
-    const home = magz.toCstr("/home/myself/me");
-    try expect(home.len == 15);
+test "toCstr" {
+    const home = magz.toCstr("/home/me/myself");
+    try expectEqual(home.len, 15);
+    try expectEqualStrings(home, "/home/me/myself");
 }
 
-test "to C string Bis" {
-    const home = magz.toCstrBis("/home/myself/me");
-    try expect(home.len == 15);
-    try expect(home[14] == 'e');
+test "toCstrBis" {
+    const home = magz.toCstrBis("/home/me/myself");
+    try expectEqual(home.len, 15);
+    try expectEqual(home[14], 'f');
+    try expectEqualStrings(home, "/home/me/myself");
 }
 
 test "MyString" {
-    const my_str = magz.MyString.init("/home/myself/me");
-    try expect(my_str.buf[14] == 'e');
-    try expect(my_str.buf[15] == 0);
-    try expect(my_str.len == 15);
+    const my_str = magz.MyString.init("/home/me/myself");
+    try expectEqual(my_str.buf[14], 'f');
+    try expectEqual(my_str.buf[15], 0);
+    try expectEqual(my_str.len, 15);
+    try expectEqualStrings(my_str.buf[0..my_str.len], "/home/me/myself");
 
-    const my_str_z = magz.MyString.init("/home/myself/me");
-    try expect(my_str_z.len == 15);
-    try expect(my_str_z.buf[14] == 'e');
+    const my_str_z = magz.MyString.init("/home/me/myself");
+    try expectEqual(my_str_z.len, 15);
+    try expectEqual(my_str_z.buf[14], 'f');
+    try expectEqual(my_str_z.len, 15);
 }
