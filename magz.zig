@@ -25,18 +25,18 @@ pub const MyString = struct {
         };
     }
 
+    pub fn string(self: *MyString) []const u8 {
+        return self.buf[0..self.len];
+    }
+
+    pub fn stringZ(self: *MyString) [:0]const u8 {
+        return self.buf[0..self.len :0];
+    }
+
     pub fn update(self: *MyString, str: []const u8) void {
         @memcpy(self.buf[0..str.len], str);
         self.buf[str.len] = 0;
         self.len = str.len;
-    }
-
-    pub fn bufForC(self: *MyString) []const u8 {
-        return self.buf[0..self.len];
-    }
-
-    pub fn strZ(self: *MyString) [:0]const u8 {
-        return self.buf[0..self.len :0];
     }
 };
 

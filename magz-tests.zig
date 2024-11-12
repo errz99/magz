@@ -17,14 +17,13 @@ test "toCstrBis" {
 }
 
 test "MyString" {
-    const my_str = magz.MyString.init("/home/me/myself");
+    var my_str = magz.MyString.init("/home/me/myself");
     try expectEqual(my_str.buf[14], 'f');
     try expectEqual(my_str.buf[15], 0);
     try expectEqual(my_str.len, 15);
-    try expectEqualStrings(my_str.buf[0..my_str.len], "/home/me/myself");
+    try expectEqualStrings(my_str.string(), "/home/me/myself");
 
     const my_str_z = magz.MyString.init("/home/me/myself");
-    try expectEqual(my_str_z.len, 15);
     try expectEqual(my_str_z.buf[14], 'f');
     try expectEqual(my_str_z.len, 15);
 }
