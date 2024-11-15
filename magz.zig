@@ -45,6 +45,11 @@ pub fn itoaBuf(num: usize) ![]const u8 {
     return buf_itoa[0..result.len];
 }
 
+pub fn mkup3s(aa: []const u8, bb: []const u8, cc: []const u8) ![]const u8 {
+    const result = try std.fmt.bufPrintZ(&buf_mkup, "{s}{s}{s}", .{ aa, bb, cc });
+    return buf_mkup[0 .. result.len + 1];
+}
+
 pub fn mkupBuf(a: []const u8, b: []const u8, cc: []const u8) ![]const u8 {
     const result = try std.fmt.bufPrintZ(&buf_mkup, "{s}{s}{s}", .{ a, b, cc });
     return buf_mkup[0 .. result.len + 1];
@@ -114,4 +119,17 @@ pub fn compare2str(str1: []const u8, str2: []const u8) bool {
 pub fn iupAxBbuf(str: []u8, num1: u64, num2: u64) !usize {
     const res = try std.fmt.bufPrintZ(str, "{}x{}", .{ num1, num2 });
     return res.len;
+}
+
+pub fn concatStrs(strs: []const []const u8) []const u8 {
+    var pos: usize = 0;
+    for (strs) |str| {
+        if (pos + str.len >= buf_mkup.len) {
+            break;
+        }
+        @memcpy(buf_mkup[pos .. pos + str.len], str);
+        pos += str.len;
+    }
+    buf_mkup[pos] = 0;
+    return buf_mkup[0..pos :0];
 }

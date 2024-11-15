@@ -36,3 +36,10 @@ test "iupAxBbuf" {
     try expectEqual(buf[4], 'x');
     try expectEqual(res, 8);
 }
+
+test "concatStrs" {
+    const home: [3][]const u8 = .{ "/home", "/me", "/myself" };
+    const concat = magz.concatStrs(&home);
+    try expectEqual(concat.len, 15);
+    try expectEqualStrings(concat, "/home/me/myself");
+}
