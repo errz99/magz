@@ -47,7 +47,7 @@ pub fn itoaBuf(num: usize) ![]const u8 {
 
 pub fn mkup3s(aa: []const u8, bb: []const u8, cc: []const u8) ![]const u8 {
     const result = try std.fmt.bufPrintZ(&buf_mkup, "{s}{s}{s}", .{ aa, bb, cc });
-    return buf_mkup[0 .. result.len + 1];
+    return buf_mkup[0..result.len :0];
 }
 
 pub fn mkupBuf(a: []const u8, b: []const u8, cc: []const u8) ![]const u8 {

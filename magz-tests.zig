@@ -31,10 +31,9 @@ test "MyString" {
 test "iupAxBbuf" {
     var buf: [16]u8 = undefined;
     const res = try magz.iupAxBbuf(&buf, 1234, 321);
-    std.debug.print("\ntest iupAxBbuf: {s}\n", .{buf[0..res]});
-
     try expectEqual(buf[4], 'x');
     try expectEqual(res, 8);
+    try expectEqualStrings(buf[0..res], "1234x321");
 }
 
 test "concatStrs" {
@@ -42,4 +41,10 @@ test "concatStrs" {
     const concat = magz.concatStrs(&home);
     try expectEqual(concat.len, 15);
     try expectEqualStrings(concat, "/home/me/myself");
+}
+
+test "mkup3s" {
+    const mkup = try magz.mkup3s("<span>", "hello", "</span>");
+    try expectEqual(mkup.len, 18);
+    try expectEqualStrings(mkup, "<span>hello</span>");
 }
