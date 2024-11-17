@@ -26,6 +26,11 @@ test "MyString" {
     const my_str_z = magz.MyString.init("/home/me/myself");
     try expectEqual(my_str_z.buf[14], 'f');
     try expectEqual(my_str_z.len, 15);
+
+    var number_s = try magz.MyString.initFromNumber(1);
+    try expectEqualStrings(number_s.string(), "1");
+    try number_s.updateFromNumber(2);
+    try expectEqualStrings(number_s.string(), "2");
 }
 
 test "iupAxBbuf" {

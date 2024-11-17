@@ -25,6 +25,18 @@ pub const MyString = struct {
         };
     }
 
+    pub fn initFromNumber(i: usize) !MyString {
+        const str = try itoaBuf(i);
+        var buf: [BUF_SIZE]u8 = undefined;
+        @memcpy(buf[0..str.len], str);
+        buf[str.len] = 0;
+
+        return MyString{
+            .buf = buf,
+            .len = str.len,
+        };
+    }
+
     pub fn string(self: *MyString) []const u8 {
         return self.buf[0..self.len];
     }
@@ -34,6 +46,12 @@ pub const MyString = struct {
     }
 
     pub fn update(self: *MyString, str: []const u8) void {
+        @memcpy(self.buf[0..str.len], str);
+        self.buf[str.len] = 0;
+        self.len = str.len;
+    }
+    pub fn updateFromNumber(self: *MyString, i: usize) !void {
+        const str = try itoaBuf(i);
         @memcpy(self.buf[0..str.len], str);
         self.buf[str.len] = 0;
         self.len = str.len;
@@ -124,12 +142,10 @@ pub fn iupAxBbuf(str: []u8, num1: u64, num2: u64) !usize {
 pub fn concatStrs(strs: []const []const u8) []const u8 {
     var pos: usize = 0;
     for (strs) |str| {
-        if (pos + str.len >= buf_mkup.len) {
-            break;
-        }
+        if (pos + str.len >= buf_mkup.len) break;
         @memcpy(buf_mkup[pos .. pos + str.len], str);
         pos += str.len;
     }
     buf_mkup[pos] = 0;
-    return buf_mkup[0..pos :0];
+    return buf_mkup[0..pos];
 }
