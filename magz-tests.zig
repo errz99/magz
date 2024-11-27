@@ -48,6 +48,14 @@ test "concatStrs" {
     try expectEqualStrings(concat, "/home/me/myself");
 }
 
+test "concatStrsBuf" {
+    var buf: [256]u8 = undefined;
+    const home: [3][]const u8 = .{ "/home", "/me", "/myself" };
+    const pos = magz.concatStrsBuf(&buf, &home);
+    try expectEqual(pos, 15);
+    try expectEqualStrings(buf[0..pos], "/home/me/myself");
+}
+
 test "mkup3s" {
     const mkup = try magz.mkup3s("<span>", "hello", "</span>");
     try expectEqual(mkup.len, 18);

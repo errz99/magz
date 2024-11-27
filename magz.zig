@@ -149,3 +149,14 @@ pub fn concatStrs(strs: []const []const u8) []const u8 {
     buf_mkup[pos] = 0;
     return buf_mkup[0..pos];
 }
+
+pub fn concatStrsBuf(buf: []u8, strs: []const []const u8) usize {
+    var pos: usize = 0;
+    for (strs) |str| {
+        if (pos + str.len >= buf.len) break;
+        @memcpy(buf[pos .. pos + str.len], str);
+        pos += str.len;
+    }
+    buf[pos] = 0;
+    return pos;
+}
