@@ -1,4 +1,5 @@
 const std = @import("std");
+const Allocator = std.mem.Allocator;
 const print = std.debug.print;
 
 var buf_itoa: [24]u8 = undefined;
@@ -9,6 +10,32 @@ var buf_end: [128]u8 = undefined;
 var buf_str: [256]u8 = undefined;
 
 const BUF_SIZE = 128;
+
+pub const MyCstr = struct {
+    allocator: Allocator = undefined,
+    buf: []u8 = undefined,
+    len: usize = 0,
+
+    pub fn init(allocator: Allocator, str: []const u8) !MyCstr {
+        var buf_str_ = try allocator.alloc(u8, str.len + 1);
+        @memcpy(buf_str_[0..str.len], str);
+        buf_str_[str.len] = 0;
+
+        return MyCstr{
+            .allocator = allocator,
+            .buf = buf_str_,
+            .len = str.len,
+        };
+    }
+
+    pub fn string(self: *MyCstr) []const u8 {
+        return self.buf[0..self.len];
+    }
+
+    pub fn deinit(self: *MyCstr) void {
+        self.allocator.free(self.buf);
+    }
+};
 
 pub const MyString = struct {
     buf: [BUF_SIZE]u8 = .{0} ** BUF_SIZE,

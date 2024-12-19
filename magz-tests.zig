@@ -16,6 +16,14 @@ test "toCstrBis" {
     try expectEqualStrings(home, "/home/me/myself");
 }
 
+test "MyCstr" {
+    const alloc = std.testing.allocator;
+    var my_str = try magz.MyCstr.init(alloc, "magarci");
+    defer my_str.deinit();
+    try expectEqualStrings(my_str.string(), "magarci");
+    try expectEqual(my_str.buf[my_str.len], 0);
+}
+
 test "MyString" {
     var my_str = magz.MyString.init("/home/me/myself");
     try expectEqual(my_str.buf[14], 'f');
