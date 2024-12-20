@@ -11,29 +11,32 @@ var buf_str: [256]u8 = undefined;
 
 const BUF_SIZE = 128;
 
+var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+
 pub const MyCstr = struct {
     allocator: Allocator = undefined,
-    buf: []u8 = undefined,
-    len: usize = 0,
+    buffer: []u8 = undefined,
+    size: usize = 0,
 
-    pub fn init(allocator: Allocator, str: []const u8) !MyCstr {
-        var buf_str_ = try allocator.alloc(u8, str.len + 1);
+    // pub fn init(allocator: Allocator, str: []const u8) !MyCstr {
+    pub fn init(str: []const u8) !MyCstr {
+        const allocator = gpa.allocator();
+        var buf_str_ = try allocator.allocSentinel(u8, str.len, 0);
         @memcpy(buf_str_[0..str.len], str);
-        buf_str_[str.len] = 0;
 
         return MyCstr{
             .allocator = allocator,
-            .buf = buf_str_,
-            .len = str.len,
+            .buffer = buf_str_,
+            .size = str.len,
         };
     }
 
     pub fn string(self: *MyCstr) []const u8 {
-        return self.buf[0..self.len];
+        return self.buffer[0..self.size];
     }
 
     pub fn deinit(self: *MyCstr) void {
-        self.allocator.free(self.buf);
+        self.allocator.free(self.buffer);
     }
 };
 
