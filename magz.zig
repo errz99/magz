@@ -18,14 +18,15 @@ pub const MyCstr = struct {
     buffer: []u8 = undefined,
     size: usize = 0,
 
-    // pub fn init(allocator: Allocator, str: []const u8) !MyCstr {
-    pub fn init(str: []const u8) !MyCstr {
-        const allocator = gpa.allocator();
-        var buf_str_ = try allocator.allocSentinel(u8, str.len, 0);
+    pub fn init(allocator: ?Allocator, str: []const u8) !MyCstr {
+        var my_allocator = gpa.allocator();
+        if (allocator) |alloc| my_allocator = alloc;
+        var buf_str_ = try my_allocator.alloc(u8, str.len + 1);
         @memcpy(buf_str_[0..str.len], str);
+        buf_str_[str.len] = 0;
 
         return MyCstr{
-            .allocator = allocator,
+            .allocator = my_allocator,
             .buffer = buf_str_,
             .size = str.len,
         };
