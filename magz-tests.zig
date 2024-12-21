@@ -3,10 +3,6 @@ const expectEqual = std.testing.expectEqual;
 const expectEqualStrings = std.testing.expectEqualStrings;
 const magz = @import("magz.zig");
 
-// const c = @cImport({
-//     @cInclude("stdio.h");
-// });
-
 test "MyCstr" {
     const alloc = std.testing.allocator;
     var my_str = try magz.MyCstr.init(alloc, "magarci");

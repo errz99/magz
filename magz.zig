@@ -109,6 +109,7 @@ pub fn mkupFs(a: []const u8, b: usize, cc: []const u8) ![]const u8 {
     return buf_mkup[0 .. result.len + 1];
 }
 
+// Better than this use std.mem.span
 pub fn fromCstrBuf(buf: []u8, str: [*c]const u8) []const u8 {
     var pos: usize = 0;
     const len = buf.len;
@@ -120,6 +121,7 @@ pub fn fromCstrBuf(buf: []u8, str: [*c]const u8) []const u8 {
     return buf[0..pos];
 }
 
+// Better than this use std.mem.span
 pub fn fromCstr(str: [*c]const u8) []const u8 {
     var pos: usize = 0;
     const len = buf_str.len;
