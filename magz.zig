@@ -116,6 +116,7 @@ pub fn fromCstrBuf(buf: []u8, str: [*c]const u8) []const u8 {
         buf[pos] = str[pos];
         pos += 1;
     }
+    buf[pos] = 0;
     return buf[0..pos];
 }
 
@@ -126,6 +127,7 @@ pub fn fromCstr(str: [*c]const u8) []const u8 {
         buf_str[pos] = str[pos];
         pos += 1;
     }
+    buf_str[pos] = 0;
     return buf_str[0..pos];
 }
 

@@ -3,6 +3,10 @@ const expectEqual = std.testing.expectEqual;
 const expectEqualStrings = std.testing.expectEqualStrings;
 const magz = @import("magz.zig");
 
+// const c = @cImport({
+//     @cInclude("stdio.h");
+// });
+
 test "MyCstr" {
     const alloc = std.testing.allocator;
     var my_str = try magz.MyCstr.init(alloc, "magarci");
@@ -27,6 +31,24 @@ test "MyString" {
     try expectEqualStrings(number_s.string(), "1");
     try number_s.updateFromNumber(2);
     try expectEqualStrings(number_s.string(), "2");
+}
+
+test "fromCstrBuf" {
+    var buffer: [128]u8 = undefined;
+    const home_z: []const u8 = "/home/me/myself";
+    const home_c: [*c]const u8 = @ptrCast(home_z);
+    const home = magz.fromCstrBuf(&buffer, home_c);
+    try expectEqual(home.len, 15);
+    try expectEqual(buffer[15], 0);
+    try expectEqualStrings(home, "/home/me/myself");
+}
+
+test "fromCstr" {
+    const home_z: []const u8 = "/home/me/myself";
+    const home_c: [*c]const u8 = @ptrCast(home_z);
+    const home = magz.fromCstr(home_c);
+    try expectEqual(home.len, 15);
+    try expectEqualStrings(home, "/home/me/myself");
 }
 
 test "toCstr" {
