@@ -88,3 +88,10 @@ test "mkup3s" {
     try expectEqual(mkup.len, 18);
     try expectEqualStrings(mkup, "<span>hello</span>");
 }
+
+test "concatArray" {
+    const string = try magz.concatArray(&.{ "<span>", "hello", "</span>" });
+    defer string.deinit();
+    try expectEqual(string.items.len, 18);
+    try expectEqualStrings(string.items, "<span>hello</span>");
+}

@@ -195,3 +195,11 @@ pub fn concatStrsBuf(buf: []u8, strs: []const []const u8) usize {
     buf[pos] = 0;
     return pos;
 }
+
+pub fn concatArray(strs: []const []const u8) !std.ArrayList(u8) {
+    var string = std.ArrayList(u8).init(gpa.allocator());
+    for (strs) |str| {
+        try string.appendSlice(str);
+    }
+    return string;
+}
