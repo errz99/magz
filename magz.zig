@@ -225,5 +225,12 @@ pub fn myConcatString(strs: []const []const u8, sentinel: bool) ![]const u8 {
 }
 
 pub fn myConcatStringDeinit() void {
-    if (concat_string) |string| string.deinit();
+    if (concat_string) |string| {
+        string.deinit();
+        concat_string = null;
+    }
+}
+
+pub fn deinit() void {
+    myConcatStringDeinit();
 }
