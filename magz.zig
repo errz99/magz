@@ -12,6 +12,7 @@ var buf_str: [256]u8 = undefined;
 const BUF_SIZE = 128;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+pub var concat_string: ?std.ArrayList(u8) = null;
 
 pub const MyCstr = struct {
     allocator: Allocator = undefined,
@@ -201,5 +202,28 @@ pub fn concatArray(strs: []const []const u8) !std.ArrayList(u8) {
     for (strs) |str| {
         try string.appendSlice(str);
     }
+    try string.append(0);
     return string;
+}
+
+pub fn myConcatString(strs: []const []const u8, sentinel: bool) ![]const u8 {
+    if (concat_string) |*string| {
+        string.clearRetainingCapacity();
+    } else {
+        concat_string = std.ArrayList(u8).init(gpa.allocator());
+    }
+
+    for (strs) |str| {
+        try concat_string.?.appendSlice(str);
+    }
+
+    if (sentinel) {
+        try concat_string.?.append(0);
+        return concat_string.?.items[0 .. concat_string.?.items.len - 1];
+    }
+    return concat_string.?.items[0..];
+}
+
+pub fn myConcatStringDeinit() void {
+    if (concat_string) |string| string.deinit();
 }

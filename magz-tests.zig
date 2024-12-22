@@ -92,6 +92,18 @@ test "mkup3s" {
 test "concatArray" {
     const string = try magz.concatArray(&.{ "<span>", "hello", "</span>" });
     defer string.deinit();
-    try expectEqual(string.items.len, 18);
-    try expectEqualStrings(string.items, "<span>hello</span>");
+    try expectEqual(string.items.len, 19);
+    try expectEqualStrings(string.items[0 .. string.items.len - 1], "<span>hello</span>");
+}
+
+test "myConcatString" {
+    const string = try magz.myConcatString(&.{ "<span>", "hello", "</span>" }, false);
+    defer magz.myConcatStringDeinit();
+    try expectEqual(string.len, 18);
+    try expectEqualStrings(string, "<span>hello</span>");
+
+    const string_sen = try magz.myConcatString(&.{ "<span>", "hello", "</span>" }, true);
+    try expectEqual(string_sen.len, 18);
+    try expectEqual(magz.concat_string.?.items[18], 0);
+    try expectEqualStrings(string_sen, "<span>hello</span>");
 }
