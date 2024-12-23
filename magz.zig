@@ -224,6 +224,17 @@ pub fn myConcatString(strs: []const []const u8, sentinel: bool) ![]const u8 {
     return concat_string.?.items[0..];
 }
 
+pub fn myConcatStringAppend(str: []const u8, sentinel: bool) ![]const u8 {
+    if (concat_string == null) concat_string = std.ArrayList(u8).init(gpa.allocator());
+    try concat_string.?.appendSlice(str);
+
+    if (sentinel) {
+        try concat_string.?.append(0);
+        return concat_string.?.items[0 .. concat_string.?.items.len - 1];
+    }
+    return concat_string.?.items[0..];
+}
+
 pub fn myConcatStringDeinit() void {
     if (concat_string) |string| {
         string.deinit();

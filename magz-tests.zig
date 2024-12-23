@@ -97,10 +97,11 @@ test "concatArray" {
 }
 
 test "myConcatString" {
-    const string = try magz.myConcatString(&.{ "<span>", "hello", "</span>" }, false);
+    var string = try magz.myConcatString(&.{ "<span>", "hello", "</span>" }, false);
     defer magz.myConcatStringDeinit();
-    try expectEqual(string.len, 18);
-    try expectEqualStrings(string, "<span>hello</span>");
+    string = try magz.myConcatStringAppend("<again>", false);
+    try expectEqual(string.len, 25);
+    try expectEqualStrings(string, "<span>hello</span><again>");
 
     const string_sen = try magz.myConcatString(&.{ "<span>", "hello", "</span>" }, true);
     try expectEqual(string_sen.len, 18);

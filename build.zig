@@ -4,11 +4,9 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    // _ = b.addModule("magz", .{ .root_source_file = .{ .path = "magz.zig" } });
     _ = b.addModule("magz", .{ .root_source_file = b.path("magz.zig") });
 
     const main_tests = b.addTest(.{
-        // .root_source_file = .{ .path = "magz-tests.zig" },
         .root_source_file = b.path("magz-tests.zig"),
         .target = target,
         .optimize = optimize,
