@@ -272,8 +272,8 @@ pub fn stringColor(color: []const u8) []const u8 {
 }
 
 pub fn stringColorBuf(buf: []u8, color: []const u8) ![]const u8 {
-    if (buf.len != buf_color.len) return Error.InvalidBuffer;
+    if (buf.len < buf_color.len) return Error.InvalidBuffer;
     _ = stringColor(color);
-    @memcpy(buf, buf_color[0..]);
+    @memcpy(buf[0..buf_color.len], &buf_color);
     return buf[0..7];
 }
