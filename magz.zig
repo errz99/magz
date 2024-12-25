@@ -15,6 +15,10 @@ const BUF_SIZE = 128;
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 pub var concat_string: ?std.ArrayList(u8) = null;
 
+pub const Error = error{
+    InvalidBuffer,
+};
+
 pub const MyCstr = struct {
     allocator: Allocator = undefined,
     buffer: []u8 = undefined,
@@ -265,4 +269,11 @@ pub fn stringColor(color: []const u8) []const u8 {
     };
 
     return buf_color[0..7];
+}
+
+pub fn stringColorBuf(buf: []u8, color: []const u8) ![]const u8 {
+    if (buf.len != buf_color.len) return Error.InvalidBuffer;
+    _ = stringColor(color);
+    @memcpy(buf, buf_color[0..]);
+    return buf[0..7];
 }
