@@ -8,6 +8,7 @@ var buf_mkup: [1024]u8 = undefined;
 var buf_start: [128]u8 = undefined;
 var buf_end: [128]u8 = undefined;
 var buf_str: [256]u8 = undefined;
+var buf_color: [8]u8 = undefined;
 
 const BUF_SIZE = 128;
 
@@ -244,4 +245,24 @@ pub fn myConcatStringDeinit() void {
 
 pub fn deinit() void {
     myConcatStringDeinit();
+}
+
+pub fn stringColor(color: []const u8) []const u8 {
+    const numbers = "0123456789ABCDEF";
+    const red = color[0];
+    const green = color[1];
+    const blue = color[2];
+
+    buf_color = .{
+        '#',
+        numbers[red / 16],
+        numbers[red % 16],
+        numbers[green / 16],
+        numbers[green % 16],
+        numbers[blue / 16],
+        numbers[blue % 16],
+        0,
+    };
+
+    return buf_color[0..7];
 }

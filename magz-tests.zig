@@ -108,3 +108,20 @@ test "myConcatString" {
     try expectEqual(magz.concat_string.?.items[18], 0);
     try expectEqualStrings(string_sen, "<span>hello</span>");
 }
+
+test "stringColor" {
+    const white = magz.stringColor(&.{ 255, 255, 255 });
+    try expectEqualStrings(white, "#FFFFFF");
+
+    const black = magz.stringColor(&.{ 0, 0, 0 });
+    try expectEqualStrings(black, "#000000");
+
+    const red = magz.stringColor(&.{ 255, 0, 0 });
+    try expectEqualStrings(red, "#FF0000");
+
+    const green = magz.stringColor(&.{ 0, 255, 0 });
+    try expectEqualStrings(green, "#00FF00");
+
+    const blue = magz.stringColor(&.{ 0, 0, 255 });
+    try expectEqualStrings(blue, "#0000FF");
+}
