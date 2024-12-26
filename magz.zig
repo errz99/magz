@@ -10,7 +10,9 @@ var buf_end: [128]u8 = undefined;
 var buf_str: [256]u8 = undefined;
 var buf_color: [8]u8 = undefined;
 
-const hex_numbers = "0123456789ABCDEF";
+const hex_numbers_up = "0123456789ABCDEF";
+const hex_numbers_lo = "0123456789abcdef";
+
 const BUF_SIZE = 128;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -18,6 +20,8 @@ pub var concat_string: ?std.ArrayList(u8) = null;
 
 pub const Error = error{
     InvalidBuffer,
+    InvalidString,
+    NotHexadecimal,
 };
 
 pub const MyCstr = struct {
@@ -259,12 +263,12 @@ pub fn stringFromRgb(color: []const u8) []const u8 {
 
     buf_color = .{
         '#',
-        hex_numbers[red / 16],
-        hex_numbers[red % 16],
-        hex_numbers[green / 16],
-        hex_numbers[green % 16],
-        hex_numbers[blue / 16],
-        hex_numbers[blue % 16],
+        hex_numbers_up[red / 16],
+        hex_numbers_up[red % 16],
+        hex_numbers_up[green / 16],
+        hex_numbers_up[green % 16],
+        hex_numbers_up[blue / 16],
+        hex_numbers_up[blue % 16],
         0,
     };
 
@@ -276,4 +280,26 @@ pub fn stringFromRgbBuf(buf: []u8, color: []const u8) ![]const u8 {
     _ = stringFromRgb(color);
     @memcpy(buf[0..buf_color.len], &buf_color);
     return buf[0..7];
+}
+
+fn hexNumber(char: u8) !u8 {
+    for (hex_numbers_up, 0..) |hex_up, i| {
+        if (char == hex_up or char == hex_numbers_lo[i]) return @intCast(i);
+    }
+    return Error.NotHexadecimal;
+}
+
+pub fn rgbFromString(str: []const u8) ![3]u8 {
+    var start_point: usize = 0;
+    if (str[0] == '#') start_point = 1;
+    if (str.len < start_point + 6) return Error.InvalidString;
+
+    var rgb: [3]u8 = undefined;
+
+    for (0..3) |i| {
+        const a = try hexNumber(str[start_point + i * 2]);
+        const b = try hexNumber(str[start_point + 1 + i * 2]);
+        rgb[i] = a * 16 + b;
+    }
+    return rgb;
 }
