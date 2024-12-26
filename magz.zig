@@ -8,11 +8,10 @@ var buf_mkup: [1024]u8 = undefined;
 var buf_start: [128]u8 = undefined;
 var buf_end: [128]u8 = undefined;
 var buf_str: [256]u8 = undefined;
-var buf_color: [8]u8 = undefined;
+var buf_color: [10]u8 = undefined;
 
 const hex_numbers_up = "0123456789ABCDEF";
 const hex_numbers_lo = "0123456789abcdef";
-
 const BUF_SIZE = 128;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -256,30 +255,38 @@ pub fn deinit() void {
     myConcatStringDeinit();
 }
 
-pub fn stringFromRgb(color: []const u8) []const u8 {
+pub fn stringFromColor(color: []const u8) []const u8 {
     const red = color[0];
     const green = color[1];
     const blue = color[2];
 
-    buf_color = .{
-        '#',
-        hex_numbers_up[red / 16],
-        hex_numbers_up[red % 16],
-        hex_numbers_up[green / 16],
-        hex_numbers_up[green % 16],
-        hex_numbers_up[blue / 16],
-        hex_numbers_up[blue % 16],
-        0,
-    };
+    buf_color[0] = '#';
+    buf_color[1] = hex_numbers_up[red / 16];
+    buf_color[2] = hex_numbers_up[red % 16];
+    buf_color[3] = hex_numbers_up[green / 16];
+    buf_color[4] = hex_numbers_up[green % 16];
+    buf_color[5] = hex_numbers_up[blue / 16];
+    buf_color[6] = hex_numbers_up[blue % 16];
 
+    if (color.len >= 4) {
+        const alpha = color[3];
+
+        buf_color[7] = hex_numbers_up[alpha / 16];
+        buf_color[8] = hex_numbers_up[alpha % 16];
+        buf_color[9] = 0;
+
+        return buf_color[0..9];
+    }
+
+    buf_color[7] = 0;
     return buf_color[0..7];
 }
 
-pub fn stringFromRgbBuf(buf: []u8, color: []const u8) ![]const u8 {
-    if (buf.len < buf_color.len) return Error.InvalidBuffer;
-    _ = stringFromRgb(color);
-    @memcpy(buf[0..buf_color.len], &buf_color);
-    return buf[0..7];
+pub fn stringFromColorBuf(buf: []u8, color: []const u8) ![]const u8 {
+    if (buf.len < color.len * 2 + 2) return Error.InvalidBuffer;
+    const result = stringFromColor(color);
+    @memcpy(buf[0..result.len], result);
+    return buf[0..result.len];
 }
 
 fn hexNumber(char: u8) !u8 {
@@ -289,17 +296,27 @@ fn hexNumber(char: u8) !u8 {
     return Error.NotHexadecimal;
 }
 
-pub fn rgbFromString(str: []const u8) ![3]u8 {
+pub fn colorFromString(str: []const u8) ![4]u8 {
     var start_point: usize = 0;
     if (str[0] == '#') start_point = 1;
     if (str.len < start_point + 6) return Error.InvalidString;
 
-    var rgb: [3]u8 = undefined;
+    var rgb: [4]u8 = .{ 0, 0, 0, 255 };
 
-    for (0..3) |i| {
-        const a = try hexNumber(str[start_point + i * 2]);
-        const b = try hexNumber(str[start_point + 1 + i * 2]);
-        rgb[i] = a * 16 + b;
+    if (str.len <= start_point + 6) {
+        for (0..3) |i| {
+            const a = try hexNumber(str[start_point + i * 2]);
+            const b = try hexNumber(str[start_point + 1 + i * 2]);
+            rgb[i] = a * 16 + b;
+        }
+        return rgb;
+    } else if (str.len >= start_point + 8) {
+        for (0..4) |i| {
+            const a = try hexNumber(str[start_point + i * 2]);
+            const b = try hexNumber(str[start_point + 1 + i * 2]);
+            rgb[i] = a * 16 + b;
+        }
+        return rgb;
     }
-    return rgb;
+    return Error.InvalidString;
 }

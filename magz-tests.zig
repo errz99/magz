@@ -109,61 +109,63 @@ test "myConcatString" {
     try expectEqualStrings(string_sen, "<span>hello</span>");
 }
 
-test "stringFromRgb" {
-    const white = magz.stringFromRgb(&.{ 255, 255, 255 });
-    try expectEqualStrings(white, "#FFFFFF");
+test "stringFromColor" {
+    const white = magz.stringFromColor(&.{ 255, 255, 255, 255 });
+    try expectEqualStrings(white, "#FFFFFFFF"); // alpha
 
-    const black = magz.stringFromRgb(&.{ 0, 0, 0 });
-    try expectEqualStrings(black, "#000000");
+    const black = magz.stringFromColor(&.{ 0, 0, 0, 0 });
+    try expectEqualStrings(black, "#00000000"); // alpha
 
-    const red = magz.stringFromRgb(&.{ 255, 0, 0 });
+    const red = magz.stringFromColor(&.{ 255, 0, 0 });
     try expectEqualStrings(red, "#FF0000");
 
-    const green = magz.stringFromRgb(&.{ 0, 255, 0 });
+    const green = magz.stringFromColor(&.{ 0, 255, 0 });
     try expectEqualStrings(green, "#00FF00");
 
-    const blue = magz.stringFromRgb(&.{ 0, 0, 255 });
+    const blue = magz.stringFromColor(&.{ 0, 0, 255 });
     try expectEqualStrings(blue, "#0000FF");
 }
 
-test "stringFromRgbBuf" {
-    var buf_black: [8]u8 = undefined;
-    var buf_white: [8]u8 = undefined;
+test "stringFromColorBuf" {
+    var buf_black: [10]u8 = undefined;
+    var buf_white: [10]u8 = undefined;
     var buf_red: [8]u8 = undefined;
     var buf_green: [8]u8 = undefined;
     var buf_blue: [8]u8 = undefined;
 
-    const black = try magz.stringFromRgbBuf(&buf_black, &.{ 0, 0, 0 });
-    const white = try magz.stringFromRgbBuf(&buf_white, &.{ 255, 255, 255 });
-    const red = try magz.stringFromRgbBuf(&buf_red, &.{ 255, 0, 0 });
-    const green = try magz.stringFromRgbBuf(&buf_green, &.{ 0, 255, 0 });
-    const blue = try magz.stringFromRgbBuf(&buf_blue, &.{ 0, 0, 255 });
+    const black = try magz.stringFromColorBuf(&buf_black, &.{ 0, 0, 0, 255 });
+    const white = try magz.stringFromColorBuf(&buf_white, &.{ 255, 255, 255, 0 });
+    const red = try magz.stringFromColorBuf(&buf_red, &.{ 255, 0, 0 });
+    const green = try magz.stringFromColorBuf(&buf_green, &.{ 0, 255, 0 });
+    const blue = try magz.stringFromColorBuf(&buf_blue, &.{ 0, 0, 255 });
 
-    try expectEqualStrings(black, "#000000");
-    try expectEqualStrings(white, "#FFFFFF");
+    try expectEqualStrings(black, "#000000FF");
+    try expectEqualStrings(white, "#FFFFFF00");
     try expectEqualStrings(red, "#FF0000");
     try expectEqualStrings(green, "#00FF00");
     try expectEqualStrings(blue, "#0000FF");
 }
 
-test "rgbFromString" {
-    const black = try magz.rgbFromString("#000000");
-    const white = try magz.rgbFromString("#FFFFFF");
-    const white_l = try magz.rgbFromString("#ffffff");
-    const red = try magz.rgbFromString("#FF0000");
-    const green = try magz.rgbFromString("#00FF00");
-    const blue = try magz.rgbFromString("#0000FF");
-    const blue_l = try magz.rgbFromString("#0000ff");
-    const blue_un = try magz.rgbFromString("0000FF");
+test "colorFromString" {
+    const invisible = try magz.colorFromString("#00000000");
+    const black = try magz.colorFromString("#000000");
+    const white = try magz.colorFromString("#FFFFFF");
+    const white_l = try magz.colorFromString("#ffffff");
+    const red = try magz.colorFromString("#FF0000");
+    const green = try magz.colorFromString("#00FF00");
+    const blue = try magz.colorFromString("#0000FF");
+    const blue_l = try magz.colorFromString("#0000ff");
+    const blue_un = try magz.colorFromString("0000FF");
 
-    _ = try magz.rgbFromString("0000FF");
+    _ = try magz.colorFromString("0000FF");
 
-    try expectEqualStrings(&black, &[3]u8{ 0, 0, 0 });
-    try expectEqualStrings(&white, &[3]u8{ 255, 255, 255 });
-    try expectEqualStrings(&white_l, &[3]u8{ 255, 255, 255 });
-    try expectEqualStrings(&red, &[3]u8{ 255, 0, 0 });
-    try expectEqualStrings(&green, &[3]u8{ 0, 255, 0 });
-    try expectEqualStrings(&blue, &[3]u8{ 0, 0, 255 });
-    try expectEqualStrings(&blue_l, &[3]u8{ 0, 0, 255 });
-    try expectEqualStrings(&blue_un, &[3]u8{ 0, 0, 255 });
+    try expectEqualStrings(&invisible, &[4]u8{ 0, 0, 0, 0 });
+    try expectEqualStrings(&black, &[4]u8{ 0, 0, 0, 255 });
+    try expectEqualStrings(&white, &[4]u8{ 255, 255, 255, 255 });
+    try expectEqualStrings(&white_l, &[4]u8{ 255, 255, 255, 255 });
+    try expectEqualStrings(&red, &[4]u8{ 255, 0, 0, 255 });
+    try expectEqualStrings(&green, &[4]u8{ 0, 255, 0, 255 });
+    try expectEqualStrings(&blue, &[4]u8{ 0, 0, 255, 255 });
+    try expectEqualStrings(&blue_l, &[4]u8{ 0, 0, 255, 255 });
+    try expectEqualStrings(&blue_un, &[4]u8{ 0, 0, 255, 255 });
 }
