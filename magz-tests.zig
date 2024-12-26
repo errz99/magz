@@ -110,19 +110,19 @@ test "myConcatString" {
 }
 
 test "stringColor" {
-    const white = magz.stringColor(&.{ 255, 255, 255 });
+    const white = magz.stringFromRgb(&.{ 255, 255, 255 });
     try expectEqualStrings(white, "#FFFFFF");
 
-    const black = magz.stringColor(&.{ 0, 0, 0 });
+    const black = magz.stringFromRgb(&.{ 0, 0, 0 });
     try expectEqualStrings(black, "#000000");
 
-    const red = magz.stringColor(&.{ 255, 0, 0 });
+    const red = magz.stringFromRgb(&.{ 255, 0, 0 });
     try expectEqualStrings(red, "#FF0000");
 
-    const green = magz.stringColor(&.{ 0, 255, 0 });
+    const green = magz.stringFromRgb(&.{ 0, 255, 0 });
     try expectEqualStrings(green, "#00FF00");
 
-    const blue = magz.stringColor(&.{ 0, 0, 255 });
+    const blue = magz.stringFromRgb(&.{ 0, 0, 255 });
     try expectEqualStrings(blue, "#0000FF");
 }
 
@@ -133,11 +133,11 @@ test "stringColorBuf" {
     var buf_green: [8]u8 = undefined;
     var buf_blue: [8]u8 = undefined;
 
-    const black = try magz.stringColorBuf(&buf_black, &.{ 0, 0, 0 });
-    const white = try magz.stringColorBuf(&buf_white, &.{ 255, 255, 255 });
-    const red = try magz.stringColorBuf(&buf_red, &.{ 255, 0, 0 });
-    const green = try magz.stringColorBuf(&buf_green, &.{ 0, 255, 0 });
-    const blue = try magz.stringColorBuf(&buf_blue, &.{ 0, 0, 255 });
+    const black = try magz.stringFromRgbBuf(&buf_black, &.{ 0, 0, 0 });
+    const white = try magz.stringFromRgbBuf(&buf_white, &.{ 255, 255, 255 });
+    const red = try magz.stringFromRgbBuf(&buf_red, &.{ 255, 0, 0 });
+    const green = try magz.stringFromRgbBuf(&buf_green, &.{ 0, 255, 0 });
+    const blue = try magz.stringFromRgbBuf(&buf_blue, &.{ 0, 0, 255 });
 
     try expectEqualStrings(black, "#000000");
     try expectEqualStrings(white, "#FFFFFF");

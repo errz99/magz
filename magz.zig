@@ -10,6 +10,7 @@ var buf_end: [128]u8 = undefined;
 var buf_str: [256]u8 = undefined;
 var buf_color: [8]u8 = undefined;
 
+const hex_numbers = "0123456789ABCDEF";
 const BUF_SIZE = 128;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -251,29 +252,28 @@ pub fn deinit() void {
     myConcatStringDeinit();
 }
 
-pub fn stringColor(color: []const u8) []const u8 {
-    const numbers = "0123456789ABCDEF";
+pub fn stringFromRgb(color: []const u8) []const u8 {
     const red = color[0];
     const green = color[1];
     const blue = color[2];
 
     buf_color = .{
         '#',
-        numbers[red / 16],
-        numbers[red % 16],
-        numbers[green / 16],
-        numbers[green % 16],
-        numbers[blue / 16],
-        numbers[blue % 16],
+        hex_numbers[red / 16],
+        hex_numbers[red % 16],
+        hex_numbers[green / 16],
+        hex_numbers[green % 16],
+        hex_numbers[blue / 16],
+        hex_numbers[blue % 16],
         0,
     };
 
     return buf_color[0..7];
 }
 
-pub fn stringColorBuf(buf: []u8, color: []const u8) ![]const u8 {
+pub fn stringFromRgbBuf(buf: []u8, color: []const u8) ![]const u8 {
     if (buf.len < buf_color.len) return Error.InvalidBuffer;
-    _ = stringColor(color);
+    _ = stringFromRgb(color);
     @memcpy(buf[0..buf_color.len], &buf_color);
     return buf[0..7];
 }
