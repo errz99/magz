@@ -302,21 +302,20 @@ pub fn colorFromString(str: []const u8) ![4]u8 {
     if (str.len < start_point + 6) return Error.InvalidString;
 
     var rgb: [4]u8 = .{ 0, 0, 0, 255 };
+    var range: usize = 0;
 
     if (str.len <= start_point + 6) {
-        for (0..3) |i| {
-            const a = try hexNumber(str[start_point + i * 2]);
-            const b = try hexNumber(str[start_point + 1 + i * 2]);
-            rgb[i] = a * 16 + b;
-        }
-        return rgb;
+        range = 3;
     } else if (str.len >= start_point + 8) {
-        for (0..4) |i| {
-            const a = try hexNumber(str[start_point + i * 2]);
-            const b = try hexNumber(str[start_point + 1 + i * 2]);
-            rgb[i] = a * 16 + b;
-        }
-        return rgb;
+        range = 4;
+    } else {
+        return Error.InvalidString;
     }
-    return Error.InvalidString;
+
+    for (0..range) |i| {
+        const a = try hexNumber(str[start_point + i * 2]);
+        const b = try hexNumber(str[start_point + 1 + i * 2]);
+        rgb[i] = a * 16 + b;
+    }
+    return rgb;
 }
