@@ -60,12 +60,18 @@ test "toCstrBis" {
     try expectEqualStrings(home, "/home/me/myself");
 }
 
+test "iupAxB" {
+    const res = try magz.iupAxB(1234, 321);
+    try expectEqualStrings(res, "1234x321");
+}
+
 test "iupAxBbuf" {
     var buf: [16]u8 = undefined;
     const res = try magz.iupAxBbuf(&buf, 1234, 321);
-    try expectEqual(buf[4], 'x');
-    try expectEqual(res, 8);
-    try expectEqualStrings(buf[0..res], "1234x321");
+    try expectEqual(res[4], 'x');
+    try expectEqual(res.len, 8);
+    try expectEqualStrings(res[0..res.len], "1234x321");
+    try expectEqualStrings(res, "1234x321");
 }
 
 test "concatStrs" {
@@ -159,13 +165,13 @@ test "colorFromString" {
 
     _ = try magz.colorFromString("0000FF");
 
-    try expectEqualStrings(&invisible, &[4]u8{ 0, 0, 0, 0 });
-    try expectEqualStrings(&black, &[4]u8{ 0, 0, 0, 255 });
-    try expectEqualStrings(&white, &[4]u8{ 255, 255, 255, 255 });
-    try expectEqualStrings(&white_l, &[4]u8{ 255, 255, 255, 255 });
-    try expectEqualStrings(&red, &[4]u8{ 255, 0, 0, 255 });
-    try expectEqualStrings(&green, &[4]u8{ 0, 255, 0, 255 });
-    try expectEqualStrings(&blue, &[4]u8{ 0, 0, 255, 255 });
-    try expectEqualStrings(&blue_l, &[4]u8{ 0, 0, 255, 255 });
-    try expectEqualStrings(&blue_un, &[4]u8{ 0, 0, 255, 255 });
+    try expectEqual(invisible, [4]u8{ 0, 0, 0, 0 });
+    try expectEqual(black, [4]u8{ 0, 0, 0, 255 });
+    try expectEqual(white, [4]u8{ 255, 255, 255, 255 });
+    try expectEqual(white_l, [4]u8{ 255, 255, 255, 255 });
+    try expectEqual(red, [4]u8{ 255, 0, 0, 255 });
+    try expectEqual(green, [4]u8{ 0, 255, 0, 255 });
+    try expectEqual(blue, [4]u8{ 0, 0, 255, 255 });
+    try expectEqual(blue_l, [4]u8{ 0, 0, 255, 255 });
+    try expectEqual(blue_un, [4]u8{ 0, 0, 255, 255 });
 }

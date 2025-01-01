@@ -179,9 +179,12 @@ pub fn compare2str(str1: []const u8, str2: []const u8) bool {
     return false;
 }
 
-pub fn iupAxBbuf(str: []u8, num1: u64, num2: u64) !usize {
-    const res = try std.fmt.bufPrintZ(str, "{}x{}", .{ num1, num2 });
-    return res.len;
+pub fn iupAxB(num1: u64, num2: u64) ![]const u8 {
+    return try std.fmt.bufPrintZ(&buf_str, "{}x{}", .{ num1, num2 });
+}
+
+pub fn iupAxBbuf(str: []u8, num1: u64, num2: u64) ![]const u8 {
+    return try std.fmt.bufPrintZ(str, "{}x{}", .{ num1, num2 });
 }
 
 pub fn concatStrs(strs: []const []const u8) []const u8 {
