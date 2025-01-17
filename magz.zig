@@ -304,7 +304,7 @@ pub fn colorFromString(str: []const u8) ![4]u8 {
     if (str[0] == '#') start_point = 1;
     if (str.len < start_point + 6) return Error.InvalidString;
 
-    var rgb: [4]u8 = .{ 0, 0, 0, 255 };
+    var color: [4]u8 = .{ 0, 0, 0, 255 };
     var range: usize = 0;
 
     if (str.len <= start_point + 6) {
@@ -318,7 +318,15 @@ pub fn colorFromString(str: []const u8) ![4]u8 {
     for (0..range) |i| {
         const a = try hexNumber(str[start_point + i * 2]);
         const b = try hexNumber(str[start_point + 1 + i * 2]);
-        rgb[i] = a * 16 + b;
+        color[i] = a * 16 + b;
     }
-    return rgb;
+    return color;
+}
+
+pub fn toLowercase(s: []const u8) []const u8 {
+    return std.ascii.lowerString(&buf_str, s);
+}
+
+pub fn toUppercase(s: []const u8) []const u8 {
+    return std.ascii.upperString(&buf_str, s);
 }

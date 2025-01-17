@@ -175,3 +175,13 @@ test "colorFromString" {
     try expectEqual(blue_l, [4]u8{ 0, 0, 255, 255 });
     try expectEqual(blue_un, [4]u8{ 0, 0, 255, 255 });
 }
+
+test "toLowercase" {
+    const lower = magz.toLowercase("to LOWERcasE");
+    try expectEqualStrings(lower, "to lowercase");
+}
+
+test "toUppercase" {
+    const upper = magz.toUppercase("TO upperCASe");
+    try expectEqualStrings(upper, "TO UPPERCASE");
+}
