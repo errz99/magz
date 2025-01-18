@@ -185,3 +185,12 @@ test "toUppercase" {
     const upper = magz.toUppercase("TO upperCASe");
     try expectEqualStrings(upper, "TO UPPERCASE");
 }
+
+test "splitStr" {
+    const alloc = std.testing.allocator;
+    const str = "one two     three four five";
+    const split = try magz.splitStrOwned(alloc, str, " ");
+    defer split.deinit();
+
+    try expectEqualStrings(split.items[2], "three");
+}

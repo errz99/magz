@@ -330,3 +330,16 @@ pub fn toLowercase(s: []const u8) []const u8 {
 pub fn toUppercase(s: []const u8) []const u8 {
     return std.ascii.upperString(&buf_str, s);
 }
+
+pub fn splitStrOwned(allocator: Allocator, s: []const u8, pat: []const u8) !std.ArrayList([]const u8) {
+    var parts = std.ArrayList([]const u8).init(allocator);
+
+    var it = std.mem.splitSequence(u8, s, pat);
+    if (it.index) |_| {
+        while (it.next()) |sp| {
+            if (sp.len > 0)
+                try parts.append(sp);
+        }
+    }
+    return parts;
+}
